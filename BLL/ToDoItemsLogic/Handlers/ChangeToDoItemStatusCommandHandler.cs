@@ -12,20 +12,20 @@ using System.Threading.Tasks;
 
 namespace BLL.ToDoItemsLogic.Handlers
 {
-    public class CompleteToDoItemCommandHandler : IRequestHandler<CompleteToDoItemCommand>
+    public class ChangeToDoItemStatusCommandHandler : IRequestHandler<ChangeToDoItemStatusCommand>
     {
         private readonly IRepository<ToDoItem> _toDoItemRepository;
         private readonly IRepository<User> _userRepository;
         private readonly IHttpContextAccessor _httpContext;
 
-        public CompleteToDoItemCommandHandler(IRepository<ToDoItem> toDoItemRepository, IRepository<User> userRepository, IHttpContextAccessor httpContextAccessor)
+        public ChangeToDoItemStatusCommandHandler(IRepository<ToDoItem> toDoItemRepository, IRepository<User> userRepository, IHttpContextAccessor httpContextAccessor)
         {
             _toDoItemRepository = toDoItemRepository;
             _userRepository = userRepository;
             _httpContext = httpContextAccessor;
         }
 
-        public async Task Handle(CompleteToDoItemCommand request, CancellationToken cancellationToken)
+        public async Task Handle(ChangeToDoItemStatusCommand request, CancellationToken cancellationToken)
         {
             ToDoItem? toDoItem;
             
@@ -38,13 +38,13 @@ namespace BLL.ToDoItemsLogic.Handlers
 
             List<ToDoItem> subItems = _toDoItemRepository.GetAllByCondition(p => p.ParentItemId == toDoItem.Id).Result.ToList();
 
-            toDoItem.Status = ToDoItemStatusType.Done;
+            toDoItem.Status = (ToDoItemStatusType)Enum.Parse(typeof(ToDoItemStatusType), request.Status.ToString());
         
             await _toDoItemRepository.UpdateAsync(toDoItem);
 
             foreach (ToDoItem subItem in subItems)
             {
-                subItem.Status = ToDoItemStatusType.Done;
+                subItem.Status = toDoItem.Status;
                 await _toDoItemRepository.UpdateAsync(subItem);
             }
 

@@ -2,8 +2,8 @@
 {
     public enum ToDoItemStatusType 
     {
-        NotStarted,
-        InProccess,
-        Done
+        NotStarted = 0,
+        InProccess = 1,
+        Done = 2
     }
 }

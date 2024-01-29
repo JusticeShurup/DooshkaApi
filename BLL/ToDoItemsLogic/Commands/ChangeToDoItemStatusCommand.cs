@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace BLL.ToDoItemsLogic.Commands
 {
-    public class CompleteToDoItemCommand : IRequest
+    public class ChangeToDoItemStatusCommand : IRequest
     {
         public Guid ToDoItemId { get; set; }
+        public int Status { get; set; }
     }
 }

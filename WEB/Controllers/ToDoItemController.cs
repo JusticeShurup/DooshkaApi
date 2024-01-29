@@ -88,11 +88,11 @@ namespace Web.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> CompleteToDoItem(ISender sender, [FromQuery] Guid id)
+        public async Task<IActionResult> ChangeToDoItemStatus(ISender sender, [FromQuery] Guid id, [FromQuery] int status)
         {
             try
             {
-                await sender.Send(new CompleteToDoItemCommand() { ToDoItemId = id});
+                await sender.Send(new ChangeToDoItemStatusCommand() { ToDoItemId = id, Status = status});
             }
             catch (Exception ex)
             {

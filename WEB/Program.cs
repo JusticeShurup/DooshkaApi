@@ -19,15 +19,8 @@ namespace Web
             var builder = WebApplication.CreateBuilder(args);
             var config = builder.Configuration;
 
-            builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(config["Connection:DatabaseConnection"]!));
-
-            builder.Services.AddScoped<IRepository<User>, UserRepository>();
-            builder.Services.AddScoped<IRepository<ToDoItem>, ToDoItemRepository>();
+            builder.Services.RegisterBussinessLogicDependencies(config);
             builder.Services.AddHttpContextAccessor();
-
-            builder.Services.AddSingleton<IPasswordHasher<User>, BCrypt<User>>();
-
-            builder.Services.RegisterRequestHandlers();
 
             builder.Services.AddControllers();
 
