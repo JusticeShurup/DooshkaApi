@@ -1,5 +1,4 @@
 ﻿using BLL.ToDoItemsLogic.DTOs;
-using DAL.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -7,7 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL.ToDoItemsLogic.Queries
+namespace BLL.ToDoItemsLogic.Commands
 {
-    public record GetToDoQuery : IRequest<List<CreatedToDoItemDTO>>;
+    public class CompleteToDoItemCommand : IRequest
+    {
+        public Guid ToDoItemId { get; set; }
+    }
 }

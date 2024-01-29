@@ -46,6 +46,18 @@ namespace Web
                     };
                 });
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder =>
+                    {
+                        builder.SetIsOriginAllowed(_ => true)
+                               .AllowAnyMethod()
+                               .AllowAnyHeader()
+                               .AllowCredentials();
+                    });
+            });
+
 
             builder.Services.AddSwaggerGen();
 
@@ -79,12 +91,10 @@ namespace Web
 
             var app = builder.Build();
 
+            app.UseCors("AllowAll");
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
 

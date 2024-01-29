@@ -51,79 +51,94 @@ namespace BLL.ToDoItemsLogic.Handlers
 
             var mainItem = request.MainItem;
 
+            ToDoItem parentItem = null;
 
-            ToDoItem item = new()
+            if (mainItem.ParentId != null)
+            {
+                parentItem = await _toDoItemRepository.FindByIdAsync(mainItem.ParentId.Value);
+                if (parentItem == null)
+                {
+                    throw new Exception("Item under parent id doesn't exists");
+                }
+            }
+
+
+            ToDoItem itemForCreate = new ToDoItem()
             {
                 Title = mainItem.Title,
                 Description = mainItem.Description,
-                Status = ToDoItemStatusType.NotStarted,
-                CreatedTime = DateTime.UtcNow,
                 CompletionTime = mainItem.CompletionTime,
-                ParentItemId = mainItem.ParentId,
+                CreatedTime = DateTime.UtcNow,
                 User = user,
                 UserId = user.Id,
+                ParentItemId = mainItem.ParentId,
+                Status = ToDoItemStatusType.NotStarted,
             };
 
-            List<ToDoItem>? subItems = null; 
+            await _toDoItemRepository.CreateAsync(itemForCreate);
+
+            if (parentItem != null)
+            {
+                if (parentItem.SubItems == null)
+                {
+                    parentItem.SubItems = new() { itemForCreate };
+                }
+                else
+                {
+                    parentItem.SubItems.Add(itemForCreate);
+                }
+
+                await _toDoItemRepository.UpdateAsync(parentItem);
+            }
+
+
+
+            List<CreatedToDoItemDTO>? subItemsList = null;
 
             if (request.SubItems != null)
             {
-                subItems = new();
-                foreach (var subItemDTO in request.SubItems)
+                subItemsList = new();
+                foreach (var subItem in request.SubItems)
                 {
-                    var subItem = new ToDoItem
+                    var subItemToDo = new ToDoItem()
                     {
-                        Title = subItemDTO.Title,
-                        Description = subItemDTO.Description,
-                        CreatedTime = item.CreatedTime,
-                        CompletionTime = subItemDTO.CompletionTime,
+                        Title = subItem.Title,
+                        Description = subItem.Description,
+                        CompletionTime = subItem.CompletionTime,
+                        CreatedTime = itemForCreate.CreatedTime,
+                        ParentItemId = itemForCreate.Id,
                         User = user,
                         UserId = user.Id,
-                        ParentItemId = item.Id
+                        Status = ToDoItemStatusType.NotStarted
                     };
-                    subItems.Add(subItem);
+
+                    await _toDoItemRepository.CreateAsync(subItemToDo);
+
+                    var subItemToDoDTO = new CreatedToDoItemDTO()
+                    {
+                        Id = subItemToDo.Id,
+                        Title = subItem.Title,
+                        Description = subItem.Description,
+                        CompletionTime = subItem.CompletionTime,
+                        CreatedTime = itemForCreate.CreatedTime,
+                        Status = ToDoItemStatusType.NotStarted
+                    };
+
+                    subItemsList.Add(subItemToDoDTO);
                 }
             }
 
-            item.SubItems = subItems;
-
-            await _toDoItemRepository.CreateAsync(item);
-
-            if (subItems != null)
+            return new CreatedToDoItemDTO()
             {
-                foreach (var subItem in item.SubItems)
-                {
-                    await _toDoItemRepository.CreateAsync(subItem);
-                }
-            }
-
-
-            List<CreatedToDoItemDTO> createdToDoItemDTOs = new List<CreatedToDoItemDTO>();
-
-            foreach (var subItem in request.SubItems)
-            {
-                createdToDoItemDTOs.Add(new CreatedToDoItemDTO
-                {
-                    Id = item.Id,
-                    Title = item.Title,
-                    Description = item.Description,
-                    Status = item.Status,
-                    CreatedTime = item.CreatedTime,
-                    CompletionTime = item.CompletionTime
-                });
-                
-            }
-
-            return new CreatedToDoItemDTO 
-            {
-                Id = item.Id, 
-                Title = item.Title, 
-                Description = item.Description,
-                Status = item.Status, 
-                CreatedTime = item.CreatedTime, 
-                CompletionTime = item.CompletionTime, 
-                SubItems = createdToDoItemDTOs
+                Id = itemForCreate.Id,
+                Title = itemForCreate.Title,
+                Description = itemForCreate.Description,
+                CompletionTime = itemForCreate.CompletionTime,
+                CreatedTime = itemForCreate.CreatedTime,
+                Status = ToDoItemStatusType.NotStarted,
+                SubItems = subItemsList
             };
+
         }
     }
 }

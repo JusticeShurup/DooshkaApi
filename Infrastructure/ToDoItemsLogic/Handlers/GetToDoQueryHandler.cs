@@ -47,87 +47,42 @@ namespace BLL.ToDoItemsLogic.Handlers
                 throw new Exception("User didn't not found");
             }
 
-            List<ToDoItem> allToDoItems = _toDoItemRepository.GetAll().ToList();
+            List<ToDoItem> allMainToDoItems = _toDoItemRepository.GetAllByCondition(p => p.UserId == user.Id && p.ParentItemId == null).Result.ToList();
 
             var list = new List<CreatedToDoItemDTO>();
 
-            if (user.ToDoItems != null)
+            foreach (ToDoItem toDoItem in allMainToDoItems)
             {
-                foreach (ToDoItem toDoItem in user.ToDoItems)
+                var subItemsList = new List<CreatedToDoItemDTO>();
+
+                List<ToDoItem> subItems = _toDoItemRepository.GetAllByCondition(p => p.ParentItemId == toDoItem.Id).Result.ToList();
+
+                foreach (var subItem in subItems)
                 {
-                    var subItemsList = new List<CreatedToDoItemDTO>();
-                    
-                    if (toDoItem.SubItems != null)
-                    { 
-                        foreach (ToDoItem subItem in toDoItem.SubItems!)
-                        {
-                            subItemsList.Add(new CreatedToDoItemDTO
-                            {
-                                Id = subItem.Id,
-                                Title = subItem.Title,
-                                Description = subItem.Description,
-                                CompletionTime = subItem.CompletionTime,
-                                CreatedTime = subItem.CreatedTime,
-                                Status = subItem.Status,
-                                SubItems = null
-                            });
-                        }
-                    }
-
-                    if (toDoItem.ParentItemId == null)
+                    subItemsList.Add(new CreatedToDoItemDTO
                     {
-                        list.Add(new CreatedToDoItemDTO
-                        {
-                            Id = toDoItem.Id,
-                            Title = toDoItem.Title,
-                            Description = toDoItem.Description,
-                            CompletionTime = toDoItem.CompletionTime,
-                            CreatedTime = toDoItem.CreatedTime,
-                            Status = toDoItem.Status,
-                            SubItems = subItemsList
-                        });
-                    }
+                        Id = subItem.Id,
+                        Title = subItem.Title,
+                        Description = subItem.Description,
+                        CompletionTime = subItem.CompletionTime,
+                        CreatedTime = subItem.CreatedTime,
+                        Status = subItem.Status
+                    });
                 }
-            }
-            else
-            {
-                foreach (ToDoItem toDoItem in allToDoItems)
+
+                list.Add(new CreatedToDoItemDTO
                 {
-                    
-                    if (toDoItem.User == user && toDoItem.ParentItemId == null)
-                    {
-                        var subItemsList = new List<CreatedToDoItemDTO>();
-
-                        if (toDoItem.SubItems == null)
-                        {
-                            foreach (ToDoItem subItem in toDoItem.SubItems!)
-                            {
-                                subItemsList.Add(new CreatedToDoItemDTO
-                                {
-                                    Id = toDoItem.Id,
-                                    Title = toDoItem.Title,
-                                    Description = toDoItem.Description,
-                                    CompletionTime = toDoItem.CompletionTime,
-                                    CreatedTime = toDoItem.CreatedTime,
-                                    Status = toDoItem.Status,
-                                    SubItems = null
-                                });
-                            }
-                        }
-
-                        list.Add(new CreatedToDoItemDTO
-                        {
-                            Id = toDoItem.Id,
-                            Title = toDoItem.Title,
-                            Description = toDoItem.Description,
-                            CompletionTime = toDoItem.CompletionTime,
-                            CreatedTime = toDoItem.CreatedTime,
-                            Status = toDoItem.Status,
-                            SubItems = subItemsList
-                        });
-                    }
-                }
+                    Id = toDoItem.Id,
+                    Title = toDoItem.Title,
+                    Description = toDoItem.Description,
+                    CompletionTime = toDoItem.CompletionTime,
+                    CreatedTime = toDoItem.CreatedTime,
+                    Status = toDoItem.Status,
+                    SubItems = subItemsList
+                });
             }
+            
+           
 
             return await Task.FromResult(list);
         }

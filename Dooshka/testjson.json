@@ -1,0 +1,49 @@
+[
+  {
+    "id": "eb19599d-5d0c-4732-8e4e-8485ce42ec1b",
+    "title": "ќткрыть таджикские рынки",
+    "description": "ќписание",
+    "status": 0,
+    "createdTime": "2024-01-28T12:03:01.766509Z",
+    "completionTime": "2024-01-28T12:01:59.893Z",
+    "subItems": [
+      {
+        "id": "413b38a6-c28c-4373-bd03-4d51d4dfa2c7",
+        "title": "«акинутьс€ насваем",
+        "description": "ќписание",
+        "status": 0,
+        "createdTime": "2024-01-28T12:03:01.766509Z",
+        "completionTime": "2024-01-28T12:01:59.893Z",
+        "subItems": null
+      },
+      {
+        "id": "c6b03b1d-8d39-4713-985f-6ec06a27e93a",
+        "title": "ќткрыть стрельбу в ћоскве",
+        "description": "ќписание",
+        "status": 0,
+        "createdTime": "2024-01-28T12:03:01.766509Z",
+        "completionTime": "2024-01-28T12:01:59.893Z",
+        "subItems": null
+      }
+    ]
+  },
+  {
+    "id": "013115d8-65fa-4055-93ed-2d59613f1e30",
+    "title": "≈банутство",
+    "description": "string",
+    "status": 0,
+    "createdTime": "2024-01-28T13:27:52.712842Z",
+    "completionTime": "2024-01-28T11:37:44.809Z",
+    "subItems": [
+      {
+        "id": "cebde0d9-c49e-4af9-8247-6911315bd387",
+        "title": "Ѕл€€€€€€€€€€€€€€€€€€",
+        "description": "string",
+        "status": 0,
+        "createdTime": "2024-01-28T13:27:52.712842Z",
+        "completionTime": "2024-01-28T11:37:44.809Z",
+        "subItems": null
+      }
+    ]
+  }
+]

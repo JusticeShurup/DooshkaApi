@@ -53,7 +53,7 @@ namespace BLL.UserLogic.Handlers
                 audience: _configuration["JwtToken:Audience"]!,
                 claims: claims,
                 notBefore: DateTime.UtcNow,
-                expires: DateTime.UtcNow.AddDays(double.Parse(_configuration["JwtToken:AccessTokenLifetimeSeconds"]!)),
+                expires: DateTime.UtcNow.AddSeconds(double.Parse(_configuration["JwtToken:AccessTokenLifetimeSeconds"]!)),
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtToken:SecretKey"]!)), SecurityAlgorithms.HmacSha256)
                 );
 

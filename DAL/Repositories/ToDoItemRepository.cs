@@ -66,7 +66,7 @@ namespace DAL.Repositories
 
         public async Task<IEnumerable<ToDoItem>> GetAllByCondition(Func<ToDoItem, bool> predicate)
         {
-            return await _context.ToDoItems.ToListAsync();
+            return _context.ToDoItems.Where(predicate).ToList();
         }
 
         public async Task UpdateAsync(ToDoItem item)

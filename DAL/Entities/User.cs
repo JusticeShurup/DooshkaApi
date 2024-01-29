@@ -7,6 +7,7 @@ namespace DAL.Entities
     [Table("Users")]
     public class User
     {
+        [Key]
         [Required]
         public Guid Id { get; set; } = Guid.NewGuid();
 

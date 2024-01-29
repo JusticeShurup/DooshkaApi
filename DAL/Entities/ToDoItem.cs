@@ -9,6 +9,7 @@ namespace DAL.Entities
     [Table("ToDoItems")]
     public class ToDoItem
     {
+        [Key]
         [Required]
         public Guid Id { get; set; } = Guid.NewGuid();
 

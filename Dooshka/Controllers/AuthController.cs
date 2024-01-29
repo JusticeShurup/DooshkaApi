@@ -3,10 +3,13 @@ using BLL.UserLogic.DTOS;
 using DAL.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
 {
+
+    [EnableCors("AllowAll")]
     [ApiController]
     [Route("api/[controller]")]
     public class AuthController : Controller
@@ -61,6 +64,26 @@ namespace Web.Controllers
 
 
             return new JsonResult(result) { StatusCode = StatusCodes.Status200OK};
+        }
+
+        [Authorize]
+        [Route("[action]")]
+        [HttpPost]
+        public async Task<IActionResult> Logout(ISender sender, LogoutCommand command)
+        {
+            LogoutResponseDTO result;
+
+            try
+            {
+                result = await sender.Send(command);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Failed to refresh {ex.Message}");
+            }
+
+
+            return new JsonResult(result) { StatusCode = StatusCodes.Status200OK };
         }
 
     }

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace BLL.ToDoItemsLogic.DTOs
 {
-    public class CreateToDoItemResponseDTO
+    public class CompleteToDoItemResponseDTO
     {
-
+        public string Response { get; set; }
     }
 }

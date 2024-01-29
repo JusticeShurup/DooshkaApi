@@ -1,5 +1,4 @@
 ﻿using BLL.ToDoItemsLogic.DTOs;
-using DAL.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -9,5 +8,8 @@ using System.Threading.Tasks;
 
 namespace BLL.ToDoItemsLogic.Queries
 {
-    public record GetToDoQuery : IRequest<List<CreatedToDoItemDTO>>;
+    public class GetToDoItemsByDateQuery : IRequest<List<CreatedToDoItemDTO>>
+    {
+        public DateOnly Date { get; set; }
+    }
 }
