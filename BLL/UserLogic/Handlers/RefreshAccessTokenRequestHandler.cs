@@ -1,4 +1,5 @@
-﻿using BLL.UserLogic.Commands;
+﻿using BLL.Exceptions;
+using BLL.UserLogic.Commands;
 using BLL.UserLogic.DTOS;
 using DAL.Entities;
 using DAL.Interfaces;
@@ -39,14 +40,14 @@ namespace BLL.UserLogic.Handlers
 
             if (email == null)
             {
-                throw new Exception("Logical error");
+                throw new BadRequestException("Logical error");
             }
 
             User? user = await _userRepository.FindByEmailAsync(email);
 
             if (user == null)
             {
-                throw new Exception("User didn't not found");
+                throw new BadRequestException("User didn't not found");
             }
 
 

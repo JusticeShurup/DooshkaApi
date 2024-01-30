@@ -1,4 +1,5 @@
-﻿using BLL.ToDoItemsLogic.Commands;
+﻿using BLL.Exceptions;
+using BLL.ToDoItemsLogic.Commands;
 using BLL.ToDoItemsLogic.DTOs;
 using DAL.Entities;
 using DAL.Interfaces;
@@ -31,23 +32,7 @@ namespace BLL.ToDoItemsLogic.Handlers
 
         public async Task<CreatedToDoItemDTO> Handle(CreateToDoItemCommand request, CancellationToken cancellationToken)
         {
-            var tokenString = _httpContext.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-
-            JwtSecurityToken token = new JwtSecurityToken(tokenString);
-
-            string? email = token.Payload.Claims.FirstOrDefault(x => x.Type.ToString() == ClaimTypes.Email)?.Value;
-
-            if (email == null)
-            {
-                throw new Exception("Logical error");
-            }
-
-            User? user = await _userRepository.FindByEmailAsync(email);
-
-            if (user == null)
-            {
-                throw new Exception("User didn't not found");
-            }
+            User user = (User)_httpContext.HttpContext.Items["User"];
 
             var mainItem = request.MainItem;
 
@@ -58,7 +43,7 @@ namespace BLL.ToDoItemsLogic.Handlers
                 parentItem = await _toDoItemRepository.FindByIdAsync(mainItem.ParentId.Value);
                 if (parentItem == null)
                 {
-                    throw new Exception("Item under parent id doesn't exists");
+                    throw new BadRequestException("Item under parent id doesn't exist");
                 }
             }
 

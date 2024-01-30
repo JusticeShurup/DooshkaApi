@@ -1,19 +1,16 @@
-﻿using BLL;
-using BLL.UserLogic.Commands;
-using BLL.UserLogic.Handlers;
+﻿using BLL.UserLogic.Handlers;
 using DAL.Entities;
 using DAL.Interfaces;
 using DAL.Repositories;
-using MediatR;
-using MediatR.Pipeline;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using JpProject.AspNetCore.PasswordHasher.Bcrypt;
+using DAL;
 
-namespace DAL
+namespace BLL
 {
     public static class Dependencies
     {

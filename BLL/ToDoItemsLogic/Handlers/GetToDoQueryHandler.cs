@@ -17,35 +17,17 @@ namespace BLL.ToDoItemsLogic.Handlers
     public class GetToDoQueryHandler : IRequestHandler<GetToDoQuery, List<CreatedToDoItemDTO>>
     {
         private readonly IRepository<ToDoItem> _toDoItemRepository;
-        private readonly IRepository<User> _userRepository;
         private readonly IHttpContextAccessor _httpContext;
 
-        public GetToDoQueryHandler(IRepository<ToDoItem> toDoItemRepository, IRepository<User> userRepository, IHttpContextAccessor httpContext) 
+        public GetToDoQueryHandler(IRepository<ToDoItem> toDoItemRepository, IHttpContextAccessor httpContext) 
         {
             _toDoItemRepository = toDoItemRepository;
-            _userRepository = userRepository;
             _httpContext = httpContext;
         }
 
         public async Task<List<CreatedToDoItemDTO>> Handle(GetToDoQuery request, CancellationToken cancellationToken)
         {
-            var tokenString = _httpContext.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-
-            JwtSecurityToken token = new JwtSecurityToken(tokenString);
-
-            string? email = token.Payload.Claims.FirstOrDefault(x => x.Type.ToString() == ClaimTypes.Email)?.Value;
-
-            if (email == null)
-            {
-                throw new Exception("Logical error");
-            }
-
-            User? user = await _userRepository.FindByEmailAsync(email);
-
-            if (user == null)
-            {
-                throw new Exception("User didn't not found");
-            }
+            User user = (User)_httpContext.HttpContext.Items["User"];
 
             List<ToDoItem> allMainToDoItems = _toDoItemRepository.GetAllByCondition(p => p.UserId == user.Id && p.ParentItemId == null).Result.ToList();
 

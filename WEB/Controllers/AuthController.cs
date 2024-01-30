@@ -18,31 +18,16 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(ISender sender, RegisterCommand command)
         {
-            var result = await sender.Send(command);
+            UserDTO result = await sender.Send(command);
 
-            if (result == null)
-            {
-                return BadRequest("User can't be created");
-            }
-
-            return new JsonResult(result) { StatusCode = StatusCodes.Status201Created};
+            return new JsonResult(result) { StatusCode = StatusCodes.Status201Created };
         }
 
         [Route("[action]")]
         [HttpPost]
         public async Task<IActionResult> Login(ISender sender, LoginCommand command)
         {
-            UserDTO result;
-
-            try
-            {
-                result = await sender.Send(command);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Failed to login {ex.Message}");
-            }
-            
+            UserDTO result = await sender.Send(command);   
 
             return Ok(result);
         }
@@ -53,14 +38,7 @@ namespace Web.Controllers
         {
             RefreshResponseDTO result;
 
-            try
-            {
-                result = await sender.Send(command);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Failed to refresh {ex.Message}");
-            }
+            result = await sender.Send(command);
 
 
             return new JsonResult(result) { StatusCode = StatusCodes.Status200OK};
@@ -73,15 +51,8 @@ namespace Web.Controllers
         {
             LogoutResponseDTO result;
 
-            try
-            {
-                result = await sender.Send(command);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Failed to refresh {ex.Message}");
-            }
-
+            result = await sender.Send(command);
+            
 
             return new JsonResult(result) { StatusCode = StatusCodes.Status200OK };
         }

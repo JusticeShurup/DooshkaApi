@@ -9,5 +9,8 @@ using System.Threading.Tasks;
 
 namespace BLL.ToDoItemsLogic.Queries
 {
-    public record GetToDoQuery : IRequest<List<CreatedToDoItemDTO>>;
+    public class GetToDoQuery :IRequest<List<CreatedToDoItemDTO>>
+    {
+
+    }
 }

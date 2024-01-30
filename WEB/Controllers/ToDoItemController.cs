@@ -1,4 +1,5 @@
-﻿using BLL.ToDoItemsLogic.Commands;
+﻿using BLL;
+using BLL.ToDoItemsLogic.Commands;
 using BLL.ToDoItemsLogic.DTOs;
 using BLL.ToDoItemsLogic.Queries;
 using MediatR;
@@ -90,16 +91,11 @@ namespace Web.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> ChangeToDoItemStatus(ISender sender, [FromQuery] Guid id, [FromQuery] int status)
         {
-            try
-            {
-                await sender.Send(new ChangeToDoItemStatusCommand() { ToDoItemId = id, Status = status});
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            
+            await sender.Send(new ChangeToDoItemStatusCommand() { ToDoItemId = id, Status = status});
 
-            return Ok();
+
+            return Ok(); 
         }
     }
 }

@@ -32,25 +32,9 @@ namespace BLL.ToDoItemsLogic.Handlers
 
         public async Task<List<CreatedToDoItemDTO>> Handle(GetToDoItemsByDateRangeQuery request, CancellationToken cancellationToken)
         {
-            var tokenString = _httpContext.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            User user = (User)_httpContext.HttpContext.Items["User"];
 
-            JwtSecurityToken token = new JwtSecurityToken(tokenString);
 
-            string? email = token.Payload.Claims.FirstOrDefault(x => x.Type.ToString() == ClaimTypes.Email)?.Value;
-
-            if (email == null)
-            {
-                throw new Exception("Logical error");
-            }
-
-            User? user = await _userRepository.FindByEmailAsync(email);
-
-            if (user == null)
-            {
-                throw new Exception("User didn't not found");
-            }
-
-            
             DateTime startDate = new DateTime(request.StartDate.Year, request.StartDate.Month, request.StartDate.Day, 0, 0, 0); // начало дня
             DateTime endDate = new DateTime(request.EndDate.Year, request.EndDate.Month, request.EndDate.Day, 23, 59, 59);
 

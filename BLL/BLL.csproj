@@ -9,6 +9,8 @@
   <ItemGroup>
     <PackageReference Include="JpProject.AspNetCore.PasswordHasher.Bcrypt" Version="3.0.3" />
     <PackageReference Include="MediatR" Version="12.2.0" />
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
@@ -21,7 +23,6 @@
   <ItemGroup>
     <Folder Include="ToDoItemsLogic\Behaviors\" />
     <Folder Include="UserLogic\Behaviors\" />
-    <Folder Include="Exceptions\" />
     <Folder Include="UserLogic\Queries\" />
   </ItemGroup>
 

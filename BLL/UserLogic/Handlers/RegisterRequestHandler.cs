@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 using DAL.Entities;
 using BLL.UserLogic.DTOS;
+using BLL.Exceptions;
 
 namespace BLL.UserLogic.Handlers
 {
@@ -31,9 +32,9 @@ namespace BLL.UserLogic.Handlers
             {
                 await _repository.CreateAsync(user);
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ex)
             {
-                return null!;
+                throw new BadRequestException(ex.Message);
             }
 
             UserDTO userDTO = new() { Id = user.Id, Email = user.Email, Name = user.Name, AccessToken = "", RefreshToken = "" };

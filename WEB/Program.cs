@@ -1,14 +1,10 @@
-using DAL;
-using DAL.Entities;
-using DAL.Interfaces;
-using DAL.Repositories;
-using JpProject.AspNetCore.PasswordHasher.Bcrypt;
+using BLL.Middlewares;
+using BLL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Web.ExceptionHandlers;
 
 namespace Web
 {
@@ -22,6 +18,13 @@ namespace Web
             builder.Services.RegisterBussinessLogicDependencies(config);
             builder.Services.AddHttpContextAccessor();
 
+            builder.Services.AddExceptionHandler<BadRequestExceptionHandler>();
+            builder.Services.AddExceptionHandler<NotFoundExceptionHandler>();
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+            
+            builder.Services.AddProblemDetails();
+            
+            builder.Services.AddScoped<TokenValidationMiddleware>();
             builder.Services.AddControllers();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -93,6 +96,8 @@ namespace Web
 
             app.UseAuthorization();
 
+            app.UseExceptionHandler();
+            app.UseMiddleware<TokenValidationMiddleware>();
 
             app.MapControllers();
 

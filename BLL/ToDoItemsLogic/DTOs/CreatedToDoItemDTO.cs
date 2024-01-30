@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BLL.ToDoItemsLogic.DTOs
 {
-    public class CreatedToDoItemDTO
+    public class CreatedToDoItemDTO 
     {
         [Required]
         public required Guid Id { get; set; }

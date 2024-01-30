@@ -1,4 +1,5 @@
-﻿using BLL.UserLogic.Commands;
+﻿using BLL.Exceptions;
+using BLL.UserLogic.Commands;
 using BLL.UserLogic.DTOS;
 using DAL.Entities;
 using DAL.Interfaces;
@@ -31,12 +32,12 @@ namespace BLL.UserLogic.Handlers
 
             if (user == null)
             {
-                throw new Exception("User doesn't exists");
+                throw new BadRequestException("User doesn't exists");
             }
 
             if (_passwordHasher.VerifyHashedPassword(user, user.Password, request.Password) == PasswordVerificationResult.Failed)
             {
-                throw new Exception("Password invalid");
+                throw new BadRequestException("Password invalid");
             }
 
             return new UserDTO {Id = user.Id, Email = user.Email, AccessToken = "", RefreshToken = user.RefreshToken };
