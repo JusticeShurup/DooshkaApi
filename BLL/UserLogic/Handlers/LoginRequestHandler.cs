@@ -28,6 +28,8 @@ namespace BLL.UserLogic.Handlers
 
         public async Task<UserDTO> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
+            Console.WriteLine("Here");
+
             var user = await _repository.FindByEmailAsync(request.Email);
 
             if (user == null)

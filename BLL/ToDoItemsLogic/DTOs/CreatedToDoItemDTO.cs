@@ -21,11 +21,11 @@ namespace BLL.ToDoItemsLogic.DTOs
         [EnumDataType(typeof(ToDoItemStatusType))]
         public ToDoItemStatusType Status { get; set; }
 
-        public required DateTime CreatedTime { get; set; }
+        public required DateOnly CreatedTime { get; set; }
 
-        public DateTime? CompletionTime { get; set; }
+        public DateOnly? CompletionTime { get; set; }
 
-        public List<CreatedToDoItemDTO>? SubItems { get; set; }
+        public List<CreatedToDoItemDTO> SubItems { get; set; } = new List<CreatedToDoItemDTO> { };
         
 
     }

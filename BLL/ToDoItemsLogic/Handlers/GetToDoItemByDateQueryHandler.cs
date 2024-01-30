@@ -34,10 +34,10 @@ namespace BLL.ToDoItemsLogic.Handlers
         {
             User user = (User)_httpContext.HttpContext.Items["User"];
 
-            DateTime targetDate = new DateTime(request.Date.Year, request.Date.Month, request.Date.Day);
+            DateOnly targetDate = new DateOnly(request.Date.Year, request.Date.Month, request.Date.Day);
 
-            DateTime startDate = targetDate.Date; // начало дня
-            DateTime endDate = startDate.AddDays(1).AddTicks(-1);
+            DateOnly startDate = targetDate; // начало дня
+            DateOnly endDate = startDate.AddDays(1);
 
             var result = await _toDoItemRepository.GetAllByCondition(p => p.CreatedTime >= startDate && p.CreatedTime <= endDate);
 
@@ -63,8 +63,7 @@ namespace BLL.ToDoItemsLogic.Handlers
                                 Description = toDoItem.Description,
                                 CompletionTime = toDoItem.CompletionTime,
                                 CreatedTime = toDoItem.CreatedTime,
-                                Status = toDoItem.Status,
-                                SubItems = null
+                                Status = toDoItem.Status
                             });
                         }
                     }

@@ -15,33 +15,6 @@ namespace Web
             var builder = WebApplication.CreateBuilder(args);
             var config = builder.Configuration;
 
-            builder.Services.RegisterBussinessLogicDependencies(config);
-            builder.Services.AddHttpContextAccessor();
-
-            builder.Services.AddExceptionHandler<BadRequestExceptionHandler>();
-            builder.Services.AddExceptionHandler<NotFoundExceptionHandler>();
-            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-            
-            builder.Services.AddProblemDetails();
-            
-            builder.Services.AddScoped<TokenValidationMiddleware>();
-            builder.Services.AddControllers();
-
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new()
-                    {
-                        ValidateIssuer = true,
-                        ValidIssuer = config["JwtToken:Issuer"]!,
-                        ValidateAudience = true,
-                        ValidAudience = config["JwtToken:Audience"]!,
-                        ValidateLifetime = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtToken:SecretKey"]!)),
-                        ValidateIssuerSigningKey = true
-                    };
-                });
-
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",
@@ -53,6 +26,39 @@ namespace Web
                                .AllowCredentials();
                     });
             });
+
+
+            builder.Services.RegisterBussinessLogicDependencies(config);
+            builder.Services.AddHttpContextAccessor();
+
+            
+            builder.Services.AddExceptionHandler<BadRequestExceptionHandler>();
+            builder.Services.AddExceptionHandler<NotFoundExceptionHandler>();
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+            
+            builder.Services.AddScoped<TokenValidationMiddleware>();
+            
+            
+            builder.Services.AddProblemDetails();
+            
+            builder.Services.AddControllers();
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new()
+                    {
+                        ClockSkew = TimeSpan.Zero,
+                        ValidateIssuer = true,
+                        ValidIssuer = config["JwtToken:Issuer"]!,
+                        ValidateAudience = true,
+                        ValidAudience = config["JwtToken:Audience"]!,
+                        ValidateLifetime = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtToken:SecretKey"]!)),
+                        ValidateIssuerSigningKey = true
+                    };
+                });
+
 
 
             builder.Services.AddSwaggerGen();
@@ -87,17 +93,22 @@ namespace Web
 
             var app = builder.Build();
 
-            app.UseCors("AllowAll");
+            app.UseExceptionHandler();
+
             // Configure the HTTP request pipeline.
             app.UseSwagger();
             app.UseSwaggerUI();
 
+
             app.UseHttpsRedirection();
 
+            app.UseCors("AllowAll");
+
+            
             app.UseAuthorization();
 
-            app.UseExceptionHandler();
             app.UseMiddleware<TokenValidationMiddleware>();
+            
 
             app.MapControllers();
 

@@ -5,6 +5,7 @@ using DAL.Entities;
 using DAL.Interfaces;
 using DAL.Repositories;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -22,34 +23,20 @@ namespace BLL.UserLogic.Handlers
     {
         private readonly IRepository<User> _userRepository;
         private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContext;
 
 
-        public RefreshAccessTokenRequestHandler(IRepository<User> repository, IConfiguration configuration)
+        public RefreshAccessTokenRequestHandler(IRepository<User> repository, IConfiguration configuration, IHttpContextAccessor httpContext)
         {
             _userRepository = repository;
             _configuration = configuration;
+            _httpContext = httpContext;
         }
 
 
         public async Task<RefreshResponseDTO> Handle(RefreshAccessTokenCommand request, CancellationToken cancellationToken)
         {
-            JwtSecurityToken token = new JwtSecurityTokenHandler().ReadJwtToken(request.RefreshToken);
-
-
-            string? email = token.Payload.Claims.FirstOrDefault(x => x.Type.ToString() == ClaimTypes.Email)?.Value;
-
-            if (email == null)
-            {
-                throw new BadRequestException("Logical error");
-            }
-
-            User? user = await _userRepository.FindByEmailAsync(email);
-
-            if (user == null)
-            {
-                throw new BadRequestException("User didn't not found");
-            }
-
+            User user = (User)_httpContext.HttpContext.Items["User"];
 
             var claims = new List<Claim> { new Claim(ClaimTypes.Email, user.Email) };
 
@@ -61,7 +48,8 @@ namespace BLL.UserLogic.Handlers
 
         private string CreateJwtAccessToken(List<Claim> claims)
         {
-            var token = new JwtSecurityToken(
+            var token = new JwtSecurityToken
+                (
                 issuer: _configuration["JwtToken:Issuer"]!,
                 audience: _configuration["JwtToken:Audience"]!,
                 claims: claims,

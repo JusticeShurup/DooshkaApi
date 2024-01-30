@@ -32,6 +32,7 @@ namespace Web.Controllers
             return Ok(result);
         }
 
+        [Authorize]
         [Route("[action]")]
         [HttpPost]
         public async Task<IActionResult> Refresh(ISender sender, RefreshAccessTokenCommand command)

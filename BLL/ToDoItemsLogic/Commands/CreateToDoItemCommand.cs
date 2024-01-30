@@ -14,7 +14,7 @@ namespace BLL.ToDoItemsLogic.Commands
         [Required]
         public required ToDoItemForCreateDTO MainItem { get; set; }
 
-        public List<ToDoItemForCreateDTO>? SubItems { get; set; }
+        public List<ToDoItemForCreateDTO> SubItems { get; set; } = new List<ToDoItemForCreateDTO> { };
 
 
     }

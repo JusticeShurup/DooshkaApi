@@ -10,6 +10,5 @@ namespace BLL.UserLogic.Commands
 {
     public class RefreshAccessTokenCommand : IRequest<RefreshResponseDTO>
     {
-        public string RefreshToken { get; set; }
     }
 }

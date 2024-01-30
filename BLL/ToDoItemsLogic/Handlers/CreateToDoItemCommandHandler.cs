@@ -36,7 +36,7 @@ namespace BLL.ToDoItemsLogic.Handlers
 
             var mainItem = request.MainItem;
 
-            ToDoItem parentItem = null;
+            ToDoItem? parentItem = null;
 
             if (mainItem.ParentId != null)
             {
@@ -52,8 +52,8 @@ namespace BLL.ToDoItemsLogic.Handlers
             {
                 Title = mainItem.Title,
                 Description = mainItem.Description,
-                CompletionTime = mainItem.CompletionTime,
-                CreatedTime = DateTime.UtcNow,
+                CompletionTime = mainItem.CompletionTime == null ? null : DateOnly.Parse(mainItem.CompletionTime),
+                CreatedTime = DateOnly.FromDateTime(DateTime.Now),
                 User = user,
                 UserId = user.Id,
                 ParentItemId = mainItem.ParentId,
@@ -78,9 +78,9 @@ namespace BLL.ToDoItemsLogic.Handlers
 
 
 
-            List<CreatedToDoItemDTO>? subItemsList = null;
+            List<CreatedToDoItemDTO> subItemsList = new List<CreatedToDoItemDTO>();
 
-            if (request.SubItems != null)
+            if (request.SubItems.Count != 0)
             {
                 subItemsList = new();
                 foreach (var subItem in request.SubItems)
@@ -89,7 +89,7 @@ namespace BLL.ToDoItemsLogic.Handlers
                     {
                         Title = subItem.Title,
                         Description = subItem.Description,
-                        CompletionTime = subItem.CompletionTime,
+                        CompletionTime = subItem.CompletionTime == null ? null : DateOnly.Parse(subItem.CompletionTime),
                         CreatedTime = itemForCreate.CreatedTime,
                         ParentItemId = itemForCreate.Id,
                         User = user,
@@ -104,7 +104,7 @@ namespace BLL.ToDoItemsLogic.Handlers
                         Id = subItemToDo.Id,
                         Title = subItem.Title,
                         Description = subItem.Description,
-                        CompletionTime = subItem.CompletionTime,
+                        CompletionTime = subItem.CompletionTime == null ? null : DateOnly.Parse(subItem.CompletionTime),
                         CreatedTime = itemForCreate.CreatedTime,
                         Status = ToDoItemStatusType.NotStarted
                     };

@@ -21,14 +21,14 @@ namespace DAL.Entities
         [EnumDataType(typeof(ToDoItemStatusType))]
         public ToDoItemStatusType Status { get; set; }
 
-        public required DateTime CreatedTime { get; set; }
+        public required DateOnly CreatedTime { get; set; }
 
-        public DateTime? CompletionTime { get; set; }
+        public DateOnly? CompletionTime { get; set; }
 
         public DateTime? TimeSpent { get; set; }
 
         [ForeignKey("ParentItemId")]
-        public List<ToDoItem>? SubItems { get; set; }
+        public List<ToDoItem> SubItems { get; set; } = new List<ToDoItem>() { };
 
         public Guid? ParentItemId { get; set; }
         
