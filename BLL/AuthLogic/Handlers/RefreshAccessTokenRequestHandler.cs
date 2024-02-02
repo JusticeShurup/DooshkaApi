@@ -1,6 +1,6 @@
 ﻿using BLL.Exceptions;
-using BLL.UserLogic.Commands;
-using BLL.UserLogic.DTOS;
+using BLL.AuthLogic.Commands;
+using BLL.AuthLogic.DTOS;
 using DAL.Entities;
 using DAL.Interfaces;
 using DAL.Repositories;
@@ -17,7 +17,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL.UserLogic.Handlers
+namespace BLL.AuthLogic.Handlers
 {
     public class RefreshAccessTokenRequestHandler : IRequestHandler<RefreshAccessTokenCommand, RefreshResponseDTO>
     {
@@ -37,6 +37,11 @@ namespace BLL.UserLogic.Handlers
         public async Task<RefreshResponseDTO> Handle(RefreshAccessTokenCommand request, CancellationToken cancellationToken)
         {
             User user = (User)_httpContext.HttpContext.Items["User"];
+
+            if (user.RefreshToken != _httpContext.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last())
+            {
+                throw new BadRequestException("You need to login again");
+            }
 
             var claims = new List<Claim> { new Claim(ClaimTypes.Email, user.Email) };
 

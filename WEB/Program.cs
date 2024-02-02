@@ -31,7 +31,7 @@ namespace Web
             builder.Services.RegisterBussinessLogicDependencies(config);
             builder.Services.AddHttpContextAccessor();
 
-            
+            builder.Services.AddExceptionHandler<UnauthorizedExceptionHandler>();
             builder.Services.AddExceptionHandler<BadRequestExceptionHandler>();
             builder.Services.AddExceptionHandler<NotFoundExceptionHandler>();
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -95,7 +95,6 @@ namespace Web
 
             app.UseExceptionHandler();
 
-            // Configure the HTTP request pipeline.
             app.UseSwagger();
             app.UseSwaggerUI();
 

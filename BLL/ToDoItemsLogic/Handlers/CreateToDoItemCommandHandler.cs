@@ -40,7 +40,7 @@ namespace BLL.ToDoItemsLogic.Handlers
 
             if (mainItem.ParentId != null)
             {
-                parentItem = await _toDoItemRepository.FindByIdAsync(mainItem.ParentId.Value);
+                parentItem = _toDoItemRepository.Find(x => x.Id == mainItem.ParentId.Value);
                 if (parentItem == null)
                 {
                     throw new BadRequestException("Item under parent id doesn't exist");
@@ -52,8 +52,8 @@ namespace BLL.ToDoItemsLogic.Handlers
             {
                 Title = mainItem.Title,
                 Description = mainItem.Description,
-                CompletionTime = mainItem.CompletionTime == null ? null : DateOnly.Parse(mainItem.CompletionTime),
-                CreatedTime = DateOnly.FromDateTime(DateTime.Now),
+                CompletionDate = mainItem.CompletionDate == null ? null : DateOnly.Parse(mainItem.CompletionDate),
+                CreatedDate = DateOnly.FromDateTime(DateTime.Now),
                 User = user,
                 UserId = user.Id,
                 ParentItemId = mainItem.ParentId,
@@ -89,8 +89,8 @@ namespace BLL.ToDoItemsLogic.Handlers
                     {
                         Title = subItem.Title,
                         Description = subItem.Description,
-                        CompletionTime = subItem.CompletionTime == null ? null : DateOnly.Parse(subItem.CompletionTime),
-                        CreatedTime = itemForCreate.CreatedTime,
+                        CompletionDate = subItem.CompletionDate == null ? null : DateOnly.Parse(subItem.CompletionDate),
+                        CreatedDate = itemForCreate.CreatedDate,
                         ParentItemId = itemForCreate.Id,
                         User = user,
                         UserId = user.Id,
@@ -104,8 +104,8 @@ namespace BLL.ToDoItemsLogic.Handlers
                         Id = subItemToDo.Id,
                         Title = subItem.Title,
                         Description = subItem.Description,
-                        CompletionTime = subItem.CompletionTime == null ? null : DateOnly.Parse(subItem.CompletionTime),
-                        CreatedTime = itemForCreate.CreatedTime,
+                        CompletionDate = subItem.CompletionDate == null ? null : DateOnly.Parse(subItem.CompletionDate),
+                        CreatedDate = itemForCreate.CreatedDate,
                         Status = ToDoItemStatusType.NotStarted
                     };
 
@@ -118,8 +118,8 @@ namespace BLL.ToDoItemsLogic.Handlers
                 Id = itemForCreate.Id,
                 Title = itemForCreate.Title,
                 Description = itemForCreate.Description,
-                CompletionTime = itemForCreate.CompletionTime,
-                CreatedTime = itemForCreate.CreatedTime,
+                CompletionDate = itemForCreate.CompletionDate,
+                CreatedDate = itemForCreate.CreatedDate,
                 Status = ToDoItemStatusType.NotStarted,
                 SubItems = subItemsList
             };

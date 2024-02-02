@@ -1,5 +1,4 @@
-﻿using BLL.UserLogic.Handlers;
-using DAL.Entities;
+﻿using DAL.Entities;
 using DAL.Interfaces;
 using DAL.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using JpProject.AspNetCore.PasswordHasher.Bcrypt;
 using DAL;
+using BLL.AuthLogic.Handlers;
 
 namespace BLL
 {
@@ -21,6 +21,8 @@ namespace BLL
 
             services.AddScoped<IRepository<User>, UserRepository>();
             services.AddScoped<IRepository<ToDoItem>, ToDoItemRepository>();
+            services.AddScoped<IRepository<RevokedToken>, RevokedTokenRepository>();
+
 
             services.AddSingleton<IPasswordHasher<User>, BCrypt<User>>();
 

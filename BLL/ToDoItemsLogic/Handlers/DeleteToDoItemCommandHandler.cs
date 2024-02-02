@@ -34,7 +34,7 @@ namespace BLL.ToDoItemsLogic.Handlers
         {
             User user = (User)_httpContext.HttpContext.Items["User"];
 
-            var toDoItem = await _toDoItemRepository.FindByIdAsync(request.Id);
+            var toDoItem = _toDoItemRepository.Find(x => x.Id == request.Id);
             
             if (toDoItem == null )
             {
@@ -46,14 +46,14 @@ namespace BLL.ToDoItemsLogic.Handlers
                 throw new BadRequestException("This ToDoItem isn't user own");
             }
 
-            var subToDoItems = await _toDoItemRepository.GetAllByCondition(p => p.ParentItemId == toDoItem.Id);
+            var subToDoItems = await _toDoItemRepository.FindAll(p => p.ParentItemId == toDoItem.Id);
 
             foreach ( var subItem in subToDoItems )
             {
-                await _toDoItemRepository.DeleteByIdAsync(subItem.Id);
+                await _toDoItemRepository.DeleteAsync(subItem);
             }
 
-            await _toDoItemRepository.DeleteByIdAsync(toDoItem.Id);
+            await _toDoItemRepository.DeleteAsync(toDoItem);
 
             return new DeleteToDoItemResponseDTO() { Response = "All deleted successffully"}; 
 

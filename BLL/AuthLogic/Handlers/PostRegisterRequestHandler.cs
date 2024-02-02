@@ -1,5 +1,5 @@
-﻿using BLL.UserLogic.Commands;
-using BLL.UserLogic.DTOS;
+﻿using BLL.AuthLogic.Commands;
+using BLL.AuthLogic.DTOS;
 using DAL.Entities;
 using DAL.Interfaces;
 using MediatR.Pipeline;
@@ -14,7 +14,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL.UserLogic.Handlers
+namespace BLL.AuthLogic.Handlers
 {
     public class PostRegisterRequestHandler : IRequestPostProcessor<RegisterCommand, UserDTO>
     {
@@ -40,7 +40,7 @@ namespace BLL.UserLogic.Handlers
             response.AccessToken = CreateJwtAccessToken(claims);
             response.RefreshToken = CreateJwtRefreshToken(claims);
 
-            var user = await _repository.FindByEmailAsync(request.Email);
+            var user = _repository.Find(x => x.Email == request.Email);
             user!.RefreshToken = response.RefreshToken;
 
             await _repository.UpdateAsync(user);

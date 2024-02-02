@@ -16,7 +16,7 @@ namespace BLL.ToDoItemsLogic.DTOs
 
         public string? Description { get; set; }
 
-        public string? CompletionTime { get; set; }
+        public string? CompletionDate { get; set; }
 
         public Guid? ParentId { get; set; }
 

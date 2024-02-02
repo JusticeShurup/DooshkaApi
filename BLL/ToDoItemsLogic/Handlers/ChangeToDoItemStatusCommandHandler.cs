@@ -30,14 +30,14 @@ namespace BLL.ToDoItemsLogic.Handlers
 
             ToDoItem? toDoItem;
 
-            toDoItem = await _toDoItemRepository.FindByIdAsync(request.ToDoItemId);
+            toDoItem = _toDoItemRepository.Find(x => x.Id == request.ToDoItemId);
 
             if (toDoItem == null)
             {
                 throw new NotFoundException("ToDoItem doesn't found");
             }
 
-            List<ToDoItem> subItems = _toDoItemRepository.GetAllByCondition(p => p.ParentItemId == toDoItem.Id).Result.ToList();
+            List<ToDoItem> subItems = _toDoItemRepository.FindAll(p => p.ParentItemId == toDoItem.Id).Result.ToList();
 
             toDoItem.Status = (ToDoItemStatusType)Enum.Parse(typeof(ToDoItemStatusType), request.Status.ToString());
 

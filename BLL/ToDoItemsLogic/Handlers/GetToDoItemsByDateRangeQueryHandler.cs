@@ -38,7 +38,7 @@ namespace BLL.ToDoItemsLogic.Handlers
             DateOnly startDate = new DateOnly(request.StartDate.Year, request.StartDate.Month, request.StartDate.Day); // начало дня
             DateOnly endDate = new DateOnly(request.EndDate.Year, request.EndDate.Month, request.EndDate.Day + 1);
 
-            var result = await _toDoItemRepository.GetAllByCondition(p => p.CompletionTime >= startDate && p.CompletionTime <= endDate);
+            var result = await _toDoItemRepository.FindAll(p => p.CompletionDate >= startDate && p.CompletionDate <= endDate);
 
             List<ToDoItem> allToDoItems = result.ToList();
 
@@ -60,8 +60,8 @@ namespace BLL.ToDoItemsLogic.Handlers
                                 Id = toDoItem.Id,
                                 Title = toDoItem.Title,
                                 Description = toDoItem.Description,
-                                CompletionTime = toDoItem.CompletionTime,
-                                CreatedTime = toDoItem.CreatedTime,
+                                CompletionDate = toDoItem.CompletionDate,
+                                CreatedDate = toDoItem.CreatedDate,
                                 Status = toDoItem.Status
                             });
                         }
@@ -72,8 +72,8 @@ namespace BLL.ToDoItemsLogic.Handlers
                         Id = toDoItem.Id,
                         Title = toDoItem.Title,
                         Description = toDoItem.Description,
-                        CompletionTime = toDoItem.CompletionTime,
-                        CreatedTime = toDoItem.CreatedTime,
+                        CompletionDate = toDoItem.CompletionDate,
+                        CreatedDate = toDoItem.CreatedDate,
                         Status = toDoItem.Status,
                         SubItems = subItemsList
                     });

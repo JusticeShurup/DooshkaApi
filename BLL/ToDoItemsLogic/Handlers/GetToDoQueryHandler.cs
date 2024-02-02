@@ -29,7 +29,7 @@ namespace BLL.ToDoItemsLogic.Handlers
         {
             User user = (User)_httpContext.HttpContext.Items["User"];
 
-            List<ToDoItem> allMainToDoItems = _toDoItemRepository.GetAllByCondition(p => p.UserId == user.Id && p.ParentItemId == null).Result.ToList();
+            List<ToDoItem> allMainToDoItems = _toDoItemRepository.FindAll(p => p.UserId == user.Id && p.ParentItemId == null).Result.ToList();
 
             var list = new List<CreatedToDoItemDTO>();
 
@@ -37,7 +37,7 @@ namespace BLL.ToDoItemsLogic.Handlers
             {
                 var subItemsList = new List<CreatedToDoItemDTO>();
 
-                List<ToDoItem> subItems = _toDoItemRepository.GetAllByCondition(p => p.ParentItemId == toDoItem.Id).Result.ToList();
+                List<ToDoItem> subItems = _toDoItemRepository.FindAll(p => p.ParentItemId == toDoItem.Id).Result.ToList();
 
                 foreach (var subItem in subItems)
                 {
@@ -46,8 +46,8 @@ namespace BLL.ToDoItemsLogic.Handlers
                         Id = subItem.Id,
                         Title = subItem.Title,
                         Description = subItem.Description,
-                        CompletionTime = subItem.CompletionTime,
-                        CreatedTime = subItem.CreatedTime,
+                        CompletionDate = subItem.CompletionDate,
+                        CreatedDate = subItem.CreatedDate,
                         Status = subItem.Status
                     });
                 }
@@ -57,8 +57,8 @@ namespace BLL.ToDoItemsLogic.Handlers
                     Id = toDoItem.Id,
                     Title = toDoItem.Title,
                     Description = toDoItem.Description,
-                    CompletionTime = toDoItem.CompletionTime,
-                    CreatedTime = toDoItem.CreatedTime,
+                    CompletionDate = toDoItem.CompletionDate,
+                    CreatedDate = toDoItem.CreatedDate,
                     Status = toDoItem.Status,
                     SubItems = subItemsList
                 });

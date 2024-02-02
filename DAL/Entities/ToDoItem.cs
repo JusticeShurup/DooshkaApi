@@ -21,9 +21,9 @@ namespace DAL.Entities
         [EnumDataType(typeof(ToDoItemStatusType))]
         public ToDoItemStatusType Status { get; set; }
 
-        public required DateOnly CreatedTime { get; set; }
+        public required DateOnly CreatedDate { get; set; }
 
-        public DateOnly? CompletionTime { get; set; }
+        public DateOnly? CompletionDate { get; set; }
 
         public DateTime? TimeSpent { get; set; }
 

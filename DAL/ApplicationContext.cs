@@ -9,6 +9,8 @@ namespace DAL
 
         public DbSet<ToDoItem> ToDoItems { get; set; }
 
+        public DbSet<RevokedToken> RevokedTokens { get; set; }
+
         public ApplicationContext(DbContextOptions options) : base(options) {}
     }
 }

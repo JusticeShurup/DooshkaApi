@@ -23,7 +23,6 @@
   <ItemGroup>
     <Folder Include="ToDoItemsLogic\Behaviors\" />
     <Folder Include="UserLogic\Behaviors\" />
-    <Folder Include="UserLogic\Queries\" />
   </ItemGroup>
 
 </Project>

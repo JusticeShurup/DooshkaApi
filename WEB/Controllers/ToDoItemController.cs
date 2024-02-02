@@ -17,13 +17,22 @@ namespace Web.Controllers
     public class ToDoItemController : Controller
     {
 
-        [HttpPut("[action]")]
-        public async Task<IActionResult> Create(ISender sender, CreateToDoItemCommand command)
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Create(ISender sender, [FromBody] CreateToDoItemCommand command)
         {
             var result = await sender.Send(command);
 
             return Ok(result);
         }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> CreateSubItem(ISender sender, [FromBody] CreateSubToDoItemCommand command)
+        {
+            var result = await sender.Send(command);
+
+            return Ok(result);
+        }
+
 
         [HttpGet("[action]")]
         public async Task<IActionResult> Get(ISender sender)
@@ -88,7 +97,7 @@ namespace Web.Controllers
             return Ok(result);
         }
 
-        [HttpPost("[action]")]
+        [HttpPut("[action]")]
         public async Task<IActionResult> ChangeToDoItemStatus(ISender sender, [FromQuery] Guid id, [FromQuery] int status)
         {
             
@@ -96,6 +105,14 @@ namespace Web.Controllers
 
 
             return Ok(); 
+        }
+
+        [HttpPut("[action]")]
+        public async Task<IActionResult> UpdateToDoItem(ISender sender, [FromBody] UpdateToDoItemCommand command)
+        {
+            var result = await sender.Send(command);
+        
+            return Ok(result);
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using BLL.UserLogic.Commands;
-using BLL.UserLogic.DTOS;
+﻿using BLL.AuthLogic.Commands;
+using BLL.AuthLogic.DTOS;
 using DAL.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -50,12 +50,11 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Logout(ISender sender, LogoutCommand command)
         {
-            LogoutResponseDTO result;
-
-            result = await sender.Send(command);
+            
+            await sender.Send(command);
             
 
-            return new JsonResult(result) { StatusCode = StatusCodes.Status200OK };
+            return Ok();
         }
 
     }

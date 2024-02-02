@@ -1,8 +1,8 @@
-﻿using BLL.UserLogic.DTOS;
+﻿using BLL.AuthLogic.DTOS;
 using MediatR;
 using System.ComponentModel.DataAnnotations;
 
-namespace BLL.UserLogic.Commands
+namespace BLL.AuthLogic.Commands
 {
     public class RegisterCommand : IRequest<UserDTO>
     {

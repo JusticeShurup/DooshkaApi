@@ -1,13 +1,13 @@
-﻿using BLL.UserLogic.Commands;
+﻿using BLL.AuthLogic.Commands;
 using DAL.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
 using DAL.Entities;
-using BLL.UserLogic.DTOS;
+using BLL.AuthLogic.DTOS;
 using BLL.Exceptions;
 
-namespace BLL.UserLogic.Handlers
+namespace BLL.AuthLogic.Handlers
 {
     public class RegisterRequestHandler : IRequestHandler<RegisterCommand, UserDTO>
     {
@@ -28,14 +28,15 @@ namespace BLL.UserLogic.Handlers
 
             user.Password = _passwordHasher.HashPassword(user, request.Password);
 
-            try
+
+            var existUser = _repository.Find(x => x.Id == user.Id);
+            if (existUser != null)
             {
-                await _repository.CreateAsync(user);
+                throw new BadRequestException("User already exist");
             }
-            catch (InvalidOperationException ex)
-            {
-                throw new BadRequestException(ex.Message);
-            }
+
+            await _repository.CreateAsync(user);
+
 
             UserDTO userDTO = new() { Id = user.Id, Email = user.Email, Name = user.Name, AccessToken = "", RefreshToken = "" };
 

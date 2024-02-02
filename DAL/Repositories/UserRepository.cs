@@ -15,53 +15,8 @@ namespace DAL.Repositories
 
         public async Task CreateAsync(User item)
         {
-            if (await _context.Users.AnyAsync(p => p.Email == item.Email))
-            {
-                throw new InvalidOperationException("User already exists");
-            }
             await _context.Users.AddAsync(item);
             await _context.SaveChangesAsync();
-        }
-
-        public void Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<User> Find(Func<User, bool> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<User?> FindByIdAsync(Guid id)
-        {
-            return await _context.Users.FirstOrDefaultAsync(p => p.Id == id);
-        }
-
-        public async Task<User?> FindByEmailAsync(string email)
-        {
-            return await _context.Users.FirstOrDefaultAsync(p => p.Email == email);
-        }
-
-        public User Get(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<User> GetAll()
-        {
-            return _context.Users.ToList();
-        }
-
-        public void Update(User item)
-        {
-            _context.Users.Update(item);
-            _context.SaveChanges();
-        }
-
-        public Task<IEnumerable<User>> GetAllByCondition(Func<User, bool> predicate)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task UpdateAsync(User item)
@@ -70,9 +25,25 @@ namespace DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public Task DeleteByIdAsync(Guid id)
+        public User? Find(Func<User, bool> predicate)
         {
-            throw new NotImplementedException();
+            return _context.Users.SingleOrDefault(predicate);
+        }
+
+        public async Task<IEnumerable<User>> FindAll(Func<User, bool> predicate)
+        {
+            return await Task.FromResult(_context.Users.Where(predicate).ToList());
+        }
+
+        public async Task DeleteAsync(User item)
+        {
+            _context.Users.Remove(item);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<User>> GetAllAsync()
+        {
+            return await _context.Users.ToListAsync();
         }
     }
 }

@@ -1,17 +1,12 @@
-﻿using BLL.Exceptions;
-using BLL.UserLogic.Commands;
-using BLL.UserLogic.DTOS;
+﻿using BLL.AuthLogic.Commands;
+using BLL.AuthLogic.DTOS;
+using BLL.Exceptions;
 using DAL.Entities;
 using DAL.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BLL.UserLogic.Handlers
+namespace BLL.AuthLogic.Handlers
 {
     public class LoginRequestHandler : IRequestHandler<LoginCommand, UserDTO>
     {
@@ -28,9 +23,7 @@ namespace BLL.UserLogic.Handlers
 
         public async Task<UserDTO> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
-            Console.WriteLine("Here");
-
-            var user = await _repository.FindByEmailAsync(request.Email);
+            var user = _repository.Find(x => x.Email ==  request.Email);
 
             if (user == null)
             {
@@ -42,7 +35,7 @@ namespace BLL.UserLogic.Handlers
                 throw new BadRequestException("Password invalid");
             }
 
-            return new UserDTO {Id = user.Id, Email = user.Email, AccessToken = "", RefreshToken = user.RefreshToken };
+            return new UserDTO {Id = user.Id, Email = user.Email, Name = user.Name, AccessToken = "", RefreshToken = "" };
         }
     }
 }

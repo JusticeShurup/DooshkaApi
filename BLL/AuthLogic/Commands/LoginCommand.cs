@@ -1,4 +1,4 @@
-﻿using BLL.UserLogic.DTOS;
+﻿using BLL.AuthLogic.DTOS;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL.UserLogic.Commands
+namespace BLL.AuthLogic.Commands
 {
     public class LoginCommand : IRequest<UserDTO>
     {

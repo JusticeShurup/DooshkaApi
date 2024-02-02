@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace DAL.Repositories
 {
@@ -25,38 +26,9 @@ namespace DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteByIdAsync(Guid id)
+        public ToDoItem? Find(Func<ToDoItem, bool> predicate)
         {
-            var result = await FindByIdAsync(id);
-            
-            if (result == null)
-            {
-                return;
-            }
-
-            _context.Remove(result!);
-            await _context.SaveChangesAsync();
-        
-        }
-
-        public IEnumerable<ToDoItem> Find(Func<ToDoItem, bool> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ToDoItem?> FindByEmailAsync(string email)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<ToDoItem?> FindByIdAsync(Guid id)
-        {
-            return await _context.ToDoItems.FirstOrDefaultAsync(p => p.Id == id);
-        }
-
-        public ToDoItem Get(int id)
-        {
-            throw new NotImplementedException();
+            return _context.ToDoItems.SingleOrDefault(predicate);
         }
 
         public IEnumerable<ToDoItem> GetAll()
@@ -64,16 +36,27 @@ namespace DAL.Repositories
             return _context.ToDoItems;
         }
 
-        public async Task<IEnumerable<ToDoItem>> GetAllByCondition(Func<ToDoItem, bool> predicate)
+        public async Task<IEnumerable<ToDoItem>> FindAll(Func<ToDoItem, bool> predicate)
         {
             return _context.ToDoItems.Where(predicate).ToList();
         }
 
         public async Task UpdateAsync(ToDoItem item)
         {
-            _context.Update(item);
+            _context.ToDoItems.Update(item);
             await _context.SaveChangesAsync();
 
+        }
+
+        public async  Task DeleteAsync(ToDoItem item)
+        {
+            _context.ToDoItems.Remove(item);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<ToDoItem>> GetAllAsync()
+        {
+            return await _context.ToDoItems.ToListAsync();
         }
     }
 }
